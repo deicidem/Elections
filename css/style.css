@@ -70,6 +70,7 @@
 }
 
 .main {
+  overflow: hidden;
   min-height: 670px;
   padding-top: 10px;
 }
@@ -164,11 +165,11 @@
 .main-cards-item .candidate-block .result {
   display: flex;
   flex-direction: column;
-  align-item: center;
   justify-content: center;
   text-align: center;
   font-size: 18px;
   font-weight: bold;
+  width: 40px;
 }
 
 .main-cards-item .candidate-block .result .progress {
@@ -328,6 +329,7 @@
 }
 
 .custom {
+  overflow: hidden;
   width: 100%;
   min-height: 670px;
   z-index: 6;

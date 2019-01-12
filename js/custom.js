@@ -1,6 +1,6 @@
 export default function custom() {
   let ready = document.getElementById('ready'),
-    newCard = document.querySelector('.main-cards-item-active').cloneNode(true),
+    newCard = document.querySelector('.main-cards-item').cloneNode(true),
     cards = document.querySelector('.main-cards'),
     name = document.getElementById('name'),
     age = document.getElementById('age'),
@@ -13,9 +13,11 @@ export default function custom() {
     personSkin = document.querySelector('#person-skin'),
     personClothes = document.querySelector('#person-clothes'),
     personHair = document.querySelector('#person-hair'),
-    sex = newCard.querySelector('.sex').textContent;
+    custom = document.querySelector('.custom');
 
-
+  newCard.classList.remove('main-cards-item-active');
+  newCard.classList.remove('fadeInLeft');
+  newCard.classList.add('fadeIn');
   // Слайдеры
   class Slider {
     constructor(slider) {
@@ -44,8 +46,7 @@ export default function custom() {
         personSkin.style.backgroundImage = `url(img/skin/skin-${this.sliderIndex+3}.png)`;
         personClothes.style.backgroundImage = `url(img/clothes/construct/clothes-${this.sliderIndex+3}.png)`;
         personHair.style.backgroundImage = `url(img/hair/construct/hair-${this.sliderIndex+3}.png)`;
-        console.log(this.slider);
-        
+
       } else if (this.sex == 'Женский') {
         this.sex = 'Мужской';
         this.sliderIndex = 1;
@@ -58,7 +59,6 @@ export default function custom() {
         personSkin.style.backgroundImage = `url(img/skin/skin-${this.sliderIndex}.png)`;
         personClothes.style.backgroundImage = `url(img/clothes/construct/clothes-${this.sliderIndex}.png)`;
         personHair.style.backgroundImage = `url(img/hair/construct/hair-${this.sliderIndex}.png)`;
-        console.log(this.slider);
       }
     }
     nextSlide() {
@@ -67,7 +67,6 @@ export default function custom() {
       } else {
         this.sliderIndex++;
       }
-      console.log(this.sliderIndex);
       if (this.pos == (-this.len + 2) * 164) this.pos = 164;
       this.pos -= 164;
       this.slider.style.transform = `translateX(${this.pos}px)`;
@@ -79,7 +78,6 @@ export default function custom() {
         this.sliderIndex--;
       }
       if (this.pos == 0) this.pos = (-this.len + 1) * 164;
-      console.log(this.sliderIndex);
       this.pos += 164;
       this.slider.style.transform = `translateX(${this.pos}px)`;
     }
@@ -93,14 +91,12 @@ export default function custom() {
         skinSlider.slider.style.transform = "translateX(0px)";
         skinSlider.pos = 0;
         personSkin.style.backgroundImage = `url(img/skin/skin-${skinSlider.sliderIndex+3}.png)`;
-        console.log(skinSlider.slider);
       } else if (skinSlider.sex == 'Женский') {
         skinSlider.sex = 'Мужской';
         skinSlider.sliderIndex = 1;
         skinSlider.slider.style.transform = "translateX(0px)";
         skinSlider.pos = 0;
         personSkin.style.backgroundImage = `url(img/skin/skin-${skinSlider.sliderIndex}.png)`;
-        console.log(skinSlider.slider);
       }
       hairSlider.checkSex();
       clothesSlider.checkSex();
@@ -109,7 +105,6 @@ export default function custom() {
   // Цвет кожи
   let skinSlider = new Slider(skin);
 
-  console.log(skinSlider.slider);
   skinSlider.next.addEventListener('click', () => {
     skinSlider.nextSlide();
     if (skinSlider.sex == "Мужской") {
@@ -130,7 +125,6 @@ export default function custom() {
   // Волосы
   let hairSlider = new Slider(hair);
 
-  console.log(hairSlider.slider);
 
   hairSlider.next.addEventListener('click', () => {
     hairSlider.nextSlide();
@@ -152,7 +146,6 @@ export default function custom() {
   // Одежда
   let clothesSlider = new Slider(clothes);
 
-  console.log(clothesSlider.slider);
   clothesSlider.next.addEventListener('click', () => {
     clothesSlider.nextSlide();
     if (clothesSlider.sex == "Мужской") {
@@ -172,12 +165,21 @@ export default function custom() {
 
 
 
-
-  // OnReady
-  ready.addEventListener('click', () => {
-    // Переход и добавление карточки
-    document.querySelector('.custom').style.display = 'none';
-    document.querySelector('.main').style.display = 'block';
+  function onReady() {
+    ready.removeEventListener('click', onReady);
+    document.querySelector('.custom').classList.toggle('fadeOut');
+    custom.children[0].classList.toggle('fadeOutLeft');
+    custom.children[2].classList.toggle('fadeOutRight');
+    custom.children[1].classList.toggle('fadeOut');
+    setTimeout(() => {
+      document.querySelector('.custom').classList.toggle('fadeOut');
+      document.querySelector('.custom').style.display = 'none';
+      document.querySelector('.main').style.display = 'block';
+      ready.addEventListener('click', onReady);
+      custom.children[0].classList.toggle('fadeOutLeft');
+      custom.children[2].classList.toggle('fadeOutRight');
+      custom.children[1].classList.toggle('fadeOut');
+    }, 2000);
     cards.children[0].classList.remove('main-cards-item-active');
     cards.insertBefore(newCard, cards.children[1]);
 
@@ -185,13 +187,15 @@ export default function custom() {
     newCard.querySelector('.name').innerHTML = name.value;
     newCard.querySelector('.age').innerHTML = age.value;
     radios.forEach(element => {
-      if (element.checked) newCard.querySelector('.sex').innerHTML = element.value;
+      if (element.checked) newCard.querySelector('.sex').textContent = element.value;
     });
     newCard.querySelector('.bio').innerHTML = bio.value;
     newCard.querySelector('.views').innerHTML = select.options[select.selectedIndex].value;
     newCard.querySelector('.photo').classList.remove('photo-1');
-    newCard.querySelector('.photo').appendChild(document.querySelector('.person'));
-  });
+    newCard.querySelector('.photo').appendChild(document.querySelector('.person').cloneNode(true));
+  }
+  // OnReady
+  ready.addEventListener('click', onReady);
 
 
 }
